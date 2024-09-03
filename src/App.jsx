@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Hd from './components/Hd';
 import Addtodo from './components/Addtodo';
 import Todoitems from './components/Todoitems';
@@ -12,24 +12,33 @@ function App() {
     return savedTodos ? JSON.parse(savedTodos) : [];
   });
 
+  const todoName = useRef(); //
+  const todoDate = useRef();
+
   // Save todos to localStorage whenever the todoItems state changes
   useEffect(() => {
     localStorage.setItem('todoItems', JSON.stringify(todoItems));
   }, [todoItems]);
 
-  const onButtonClick = (name, dueDate) => {
-    if (!name || !dueDate) {
-      alert('Please enter both a task and a due date.');
+  const onButtonClick = (event) => {
+    event.preventDefault();
+    const task = todoName.current.value;
+    const date = todoDate.current.value;
+
+    if (!task) {
+      alert("Please enter a task");
       return;
     }
-    const newTodo = {
-      name: name,
-      dueDate: dueDate,
-      id: Date.now(), // Use timestamp as a unique ID
-    };
+
+    const id = new Date().getTime();
+    const newTodo = { id, name: task, dueDate: date };
     setTodoItems([...todoItems, newTodo]);
+    
+    // Clear the input fields after adding the task
+    todoName.current.value = '';
+    todoDate.current.value = '';
   };
-  
+
   const handleDelete = (id) => {
     setTodoItems(todoItems.filter((x) => x.id !== id));
   };
@@ -39,7 +48,7 @@ function App() {
       <center>
         <Hd />
         <div className="container">
-          <Addtodo onButtonClick={onButtonClick} />
+          <Addtodo onButtonClick={onButtonClick} todoName={todoName} todoDate={todoDate} />
           {todoItems.length === 0 && <Welcome />} 
           <Todoitems todoitems={todoItems} handleDelete={handleDelete} />
         </div>

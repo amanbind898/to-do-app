@@ -8,6 +8,7 @@ body {
     justify-content: center;
     align-items: center;
     height: 100vh;
+    width: 90vw;
     overflow: hidden;
 }
 
@@ -29,8 +30,8 @@ body {
     border-radius: 15px;
     box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
     width: 100%;
-    max-width: 550px;
-    overflow-y: auto;
+    max-width: 320px;
+ 
     max-height: 80vh;
 }
 
